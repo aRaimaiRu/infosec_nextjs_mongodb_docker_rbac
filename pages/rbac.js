@@ -4,7 +4,7 @@ import useSWR from 'swr';
 import { useCurrentUser } from '@/lib/user';
 import { useRouter } from 'next/router';
 
-function Mytable({ posts }) {
+function Mytable({ posts, user }) {
   const [data, setData] = useState(posts);
 
   const handleChange = (changeTo, ind, key) => {
@@ -13,8 +13,11 @@ function Mytable({ posts }) {
     );
   };
   console.log(posts);
+  if (posts.filter((c) => c.roleName === user.role.roleName)[0].R != '1')
+    return <div>Your can't access role table</div>;
   return (
     <div>
+      <h1>Your roleName :{user.role.roleName}</h1>
       <table className="table table-dark">
         <thead>
           <tr>

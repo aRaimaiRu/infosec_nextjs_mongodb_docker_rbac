@@ -29,7 +29,6 @@ handler.use(database, ...auths);
 handler.get(async (req, res) => {
   if (!req.user) return res.json({ user: null });
   let user = await findUserById(req.db, req.user._id);
-  console.log('cur user = ', user);
   return res.json({ user });
 });
 
