@@ -13,6 +13,7 @@ import toast from 'react-hot-toast';
 import styles from './Commenter.module.css';
 
 const CommenterInner = ({ user, post }) => {
+  console.log('commenter user =', user);
   const contentRef = useRef();
   const [isLoading, setIsLoading] = useState(false);
 
