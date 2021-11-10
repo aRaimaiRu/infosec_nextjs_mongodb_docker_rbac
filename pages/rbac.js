@@ -1,12 +1,29 @@
 import React, { useState, useEffect } from 'react';
 import { fetcher } from '@/lib/fetch';
-import useSWR from 'swr';
+import useSWR, { mutate } from 'swr';
 import { useCurrentUser } from '@/lib/user';
 import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
 
-function Mytable({ posts, user }) {
+const updateCRUD = async (body) => {
+  try {
+    const response = await fetcher('/api/roles', {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ ...body }),
+    });
+    toast.success('success');
+  } catch (e) {
+    toast.error('can not update');
+  }
+  return;
+};
+
+function Mytable({ posts, user, mutate }) {
   const [data, setData] = useState(posts);
-
+  useEffect(() => {
+    setData(posts);
+  }, [mutate, posts]);
   const handleChange = (changeTo, ind, key) => {
     setData((prevState) =>
       prevState.map((s, i) => (i == ind ? { ...s, [key]: changeTo } : s))
@@ -18,12 +35,14 @@ function Mytable({ posts, user }) {
   return (
     <div>
       <h1>Your roleName :{user.role.roleName}</h1>
+      <p> 1 = permit </p>
       <table className="table table-dark">
         <thead>
           <tr>
             {Object.keys(posts[0]).map((h, k) => (
               <th key={k + 'th'}>{h}</th>
             ))}
+            <th>Action</th>
           </tr>
         </thead>
         <tbody>
@@ -82,6 +101,18 @@ function Mytable({ posts, user }) {
                   style={{ maxWidth: '30px' }}
                 />
               </td>
+              <td>
+                <button
+                  type="button"
+                  class="btn btn-primary"
+                  onClick={async () => {
+                    await updateCRUD(data[i]);
+                    mutate('/api/roles');
+                  }}
+                >
+                  Update Row
+                </button>
+              </td>
             </tr>
           ))}
         </tbody>
@@ -104,12 +135,12 @@ export default function Rbac() {
 }
 
 function RbacRoles({ user }) {
-  const { data, error } = useSWR('/api/roles', fetcher, {
+  const { data, error, mutate } = useSWR('/api/roles', fetcher, {
     refreshInterval: 5000,
   });
 
-  if (!data) return <div>...loading</div>;
+  if (!data?.posts) return <div>...loading</div>;
   if (error) return <div>Error</div>;
   if (!user) return <div>no user</div>;
-  return <Mytable posts={data.posts} user={user} />;
+  return <Mytable posts={data.posts} user={user} mutate={mutate} />;
 }

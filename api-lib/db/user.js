@@ -2,6 +2,9 @@ import bcrypt from 'bcryptjs';
 import { ObjectId } from 'mongodb';
 import normalizeEmail from 'validator/lib/normalizeEmail';
 
+function getRandomInt(max) {
+  return Math.floor(Math.random() * max);
+}
 export async function findUserWithEmailAndPassword(db, email, password) {
   email = normalizeEmail(email);
   const user = await db.collection('users').findOne({ email });
@@ -71,7 +74,7 @@ export async function insertUser(
   { email, originalPassword, bio = '', name, profilePicture, username }
 ) {
   let roles = await db.collection('roles').find({}).toArray();
-  let roleId = new ObjectId(roles[0]._id);
+  let roleId = new ObjectId(roles[getRandomInt(roles.length)]._id);
   console.log(await db.collection('roles').find({}).toArray());
   const user = {
     emailVerified: false,

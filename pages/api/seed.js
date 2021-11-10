@@ -39,6 +39,7 @@ handler.get(
       U: '1',
       D: '1',
     };
+
     if (await findRoleByRoleName(req.db, roleName)) {
       res
         .status(403)
@@ -46,6 +47,20 @@ handler.get(
       return;
     }
     const role = await insertRole(req.db, { roleName, C, R, U, D });
+    const role2 = await insertRole(req.db, {
+      roleName: 'Customer2',
+      C: '1',
+      R: '1',
+      U: '1',
+      D: '1',
+    });
+    const role3 = await insertRole(req.db, {
+      roleName: 'Customer3',
+      C: '1',
+      R: '1',
+      U: '1',
+      D: '1',
+    });
     res.json({ role });
   }
 );
