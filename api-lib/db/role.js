@@ -21,6 +21,16 @@ export async function findRoleById(db, id) {
   if (!roles[0]) return null;
   return roles[0];
 }
+//findbyRoleName
+export async function findRoleByRoleName(db, roleName) {
+  const roles = await db
+    .collection('roles')
+    .aggregate([{ $match: { roleName } }, { $limit: 1 }])
+    .toArray();
+  if (!roles[0]) return null;
+  return roles[0];
+}
+
 //findroles
 // export async function findPosts(db) {
 //   return db.collection('posts').find({}).toArray();

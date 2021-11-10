@@ -12,4 +12,11 @@ export const ValidateProps = {
   comment: {
     content: { type: 'string', minLength: 1, maxLength: 280 },
   },
+  role: {
+    roleName: { type: 'string', minLength: 1, maxLength: 280 },
+    C: { type: 'string', minLength: 1, maxLength: 2 },
+    R: { type: 'string', minLength: 1, maxLength: 2 },
+    U: { type: 'string', minLength: 1, maxLength: 2 },
+    D: { type: 'string', minLength: 1, maxLength: 2 },
+  },
 };
