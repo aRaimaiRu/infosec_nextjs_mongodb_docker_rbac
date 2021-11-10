@@ -1,5 +1,5 @@
 import { ValidateProps } from '@/api-lib/constants';
-import { findPosts, findRoles, insertPost } from '@/api-lib/db';
+import { findPosts, findRoles, insertPost, updateRoleById } from '@/api-lib/db';
 import { auths, database, validateBody } from '@/api-lib/middlewares';
 import { ncOpts } from '@/api-lib/nc';
 import nc from 'next-connect';
@@ -12,6 +12,12 @@ handler.get(async (req, res) => {
   const posts = await findRoles(req.db);
 
   res.json({ posts });
+});
+
+handler.put(async (req, res) => {
+  let { _id, ...param } = req.body;
+  const updateRole = await updateRoleById(req.db, _id, param);
+  res.json({ role: updateRole });
 });
 
 // handler.post(

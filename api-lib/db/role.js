@@ -36,4 +36,15 @@ export async function findRoles(db) {
   return db.collection('roles').find({}).toArray();
 }
 //updaterole
+export async function updateRoleById(db, id, data) {
+  console.log('find and update', id, data);
+  return db
+    .collection('roles')
+    .findOneAndUpdate(
+      { _id: new ObjectId(id) },
+      { $set: data },
+      { returnDocument: 'after' }
+    )
+    .then(({ value }) => value);
+}
 //deleterole
