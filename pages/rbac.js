@@ -13,7 +13,7 @@ function Mytable({ posts, user }) {
     );
   };
   console.log(posts);
-  if (posts.filter((c) => c.roleName === user.role.roleName)[0].R != '1')
+  if (posts.filter((c) => c.roleName === user?.role?.roleName)[0].R != '1')
     return <div>Your can't access role table</div>;
   return (
     <div>
@@ -36,7 +36,7 @@ function Mytable({ posts, user }) {
                   onChange={(e) => handleChange(e.target.value, i, 'roleName')}
                   value={data[i]['roleName']}
                   minLength="1"
-                  maxLength="1"
+                  maxLength="10"
                 />
               </td>
               <td>
@@ -46,6 +46,7 @@ function Mytable({ posts, user }) {
                   value={data[i]['C']}
                   minLength="1"
                   maxLength="1"
+                  style={{ maxWidth: '30px' }}
                 />
               </td>
               <td>
@@ -56,6 +57,7 @@ function Mytable({ posts, user }) {
                   value={data[i]['R']}
                   minLength="1"
                   maxLength="1"
+                  style={{ maxWidth: '30px' }}
                 />
               </td>
               <td>
@@ -66,6 +68,7 @@ function Mytable({ posts, user }) {
                   value={data[i]['U']}
                   minLength="1"
                   maxLength="1"
+                  style={{ maxWidth: '30px' }}
                 />
               </td>{' '}
               <td>
@@ -76,6 +79,7 @@ function Mytable({ posts, user }) {
                   value={data[i]['D']}
                   minLength="1"
                   maxLength="1"
+                  style={{ maxWidth: '30px' }}
                 />
               </td>
             </tr>
@@ -106,6 +110,6 @@ function RbacRoles({ user }) {
 
   if (!data) return <div>...loading</div>;
   if (error) return <div>Error</div>;
-
+  if (!user) return <div>no user</div>;
   return <Mytable posts={data.posts} user={user} />;
 }
