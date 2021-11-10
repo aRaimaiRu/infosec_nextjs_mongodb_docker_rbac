@@ -32,8 +32,8 @@ export async function findRoleByRoleName(db, roleName) {
 }
 
 //findroles
-// export async function findPosts(db) {
-//   return db.collection('posts').find({}).toArray();
-// }
+export async function findRoles(db) {
+  return db.collection('roles').find({}).toArray();
+}
 //updaterole
 //deleterole

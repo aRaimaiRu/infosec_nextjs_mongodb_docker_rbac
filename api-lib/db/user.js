@@ -19,10 +19,25 @@ export async function findUserForAuth(db, userId) {
 }
 
 export async function findUserById(db, userId) {
-  return db
+  const user = await db
     .collection('users')
-    .findOne({ _id: new ObjectId(userId) }, { projection: dbProjectionUsers() })
-    .then((user) => user || null);
+    .aggregate([
+      { $match: { _id: new ObjectId(userId) } },
+      { $limit: 1 },
+      {
+        $lookup: {
+          from: 'roles',
+          localField: 'roleId',
+          foreignField: '_id',
+          as: 'role',
+        },
+      },
+      { $unwind: '$role' },
+      { $project: { password: 0 } },
+    ])
+    .toArray();
+  if (!user[0]) return null;
+  return user[0];
 }
 
 export async function findUserByUsername(db, username) {
@@ -55,6 +70,9 @@ export async function insertUser(
   db,
   { email, originalPassword, bio = '', name, profilePicture, username }
 ) {
+  let roles = await db.collection('roles').find({}).toArray();
+  let roleId = new ObjectId(roles[0]._id);
+  console.log(await db.collection('roles').find({}).toArray());
   const user = {
     emailVerified: false,
     profilePicture,
@@ -62,6 +80,7 @@ export async function insertUser(
     name,
     username,
     bio,
+    roleId,
   };
   const password = await bcrypt.hash(originalPassword, 10);
   const { insertedId } = await db

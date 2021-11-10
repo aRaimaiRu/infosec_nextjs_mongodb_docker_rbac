@@ -1,5 +1,5 @@
 import { ValidateProps } from '@/api-lib/constants';
-import { findUserByUsername, updateUserById } from '@/api-lib/db';
+import { findUserByUsername, updateUserById, findUserById } from '@/api-lib/db';
 import { auths, database, validateBody } from '@/api-lib/middlewares';
 import { ncOpts } from '@/api-lib/nc';
 import { slugUsername } from '@/lib/user';
@@ -28,7 +28,9 @@ handler.use(database, ...auths);
 
 handler.get(async (req, res) => {
   if (!req.user) return res.json({ user: null });
-  return res.json({ user: req.user });
+  let user = await findUserById(req.db, req.user._id);
+  console.log('cur user = ', user);
+  return res.json({ user });
 });
 
 handler.patch(
